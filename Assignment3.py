@@ -16,7 +16,7 @@ class Course:
 
     #Not sure if this is needed wording on assignment is vague
     def save(self):
-        # Course.csv 
+        #Course.csv 
         try:
             df = pd.read_csv('Course.csv')
             #Apply the same 'update object' logic here 
@@ -28,8 +28,7 @@ class Course:
             print('+++ Creating a new DataFrame +++')
             df = pd.DataFrame([[self._id, self._courseName, self._courseDesc]], columns=['ID', 'Course_Name','Description'])
         df.to_csv('Course.csv', index=False)
-        for o in self._enrollment:
-            o.save()
+
     
 
 class ClassEnrollment:
@@ -70,7 +69,7 @@ class ClassEnrollment:
         df.to_csv('ClassEnrollment.csv', index=False)
 
         if(self._course != None):
-            self._course.save()
+             self._course.save()
     
 class Student:
     def __init__(self, c, f, l):
@@ -177,6 +176,30 @@ CE6._course = C3
 CE7._course = C1
 CE8._course = C2
 CE9._course = C3
+
+C1._enrollment.append(CE1)
+C1._enrollment.append(CE4)
+C1._enrollment.append(CE7)
+
+C2._enrollment.append(CE2)
+C2._enrollment.append(CE5)
+C2._enrollment.append(CE8)
+
+C3._enrollment.append(CE3)
+C3._enrollment.append(CE6)
+C3._enrollment.append(CE9)
+
+A.enroll2Class(CE1)
+A.enroll2Class(CE2)
+A.enroll2Class(CE3)
+
+B.enroll2Class(CE1)
+B.enroll2Class(CE2)
+B.enroll2Class(CE3)
+
+C.enroll2Class(CE1)
+C.enroll2Class(CE2)
+C.enroll2Class(CE3)
 
 A.save()
 
