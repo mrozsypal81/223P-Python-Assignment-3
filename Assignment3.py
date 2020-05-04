@@ -89,7 +89,7 @@ class Student:
     def delete(self):
         # first find the row index of this object
         df = pd.read_csv('Student.csv')
-        row = df[df.Id == self._cwid]
+        row = df[df.CWID == self._cwid]
         print('+++ delete +++' , row.index[0])
         if (len(row.index) != 0):
             print('+++ Before ', df)
@@ -108,7 +108,7 @@ class Student:
             df.loc[cnt] = {'CWID':self._cwid, 'FName': self._firstname,'LNAME': self._lastname}
         except:
             print('+++ Creating a new DataFrame +++')
-            df = pd.DataFrame([[self._cwid, self._firstname, self._lastname]], columns=['CWID', 'FName','LName'])
+            df = pd.DataFrame([[self._cwid, self._firstname, self._lastname]], columns=['CWID','FName','LName'])
         df.to_csv('Student.csv', index=False)
         for o in self._enrollments:
             o.save()
@@ -128,15 +128,17 @@ class Student:
 ############## TEST DATA ####################
 
 
+#Creation of students
 A = Student("1","Mike1","Rozy1")
 B = Student("2","Mike2","Rozy2")
 C = Student("3","Mike3","Rozy3")
 
-
+#Creation of different Classes
 C1 = Course("C1","Course1","Coursedesc1")
 C2 = Course("C2","Course2","Coursedesc2")
 C3 = Course("C3","Course3","Coursedesc3")
 
+#Creation of different enrollments and grades
 CE1 = ClassEnrollment("CE1","Grade1")
 CE2 = ClassEnrollment("CE2","Grade2")
 CE3 = ClassEnrollment("CE3","Grade3")
@@ -153,6 +155,8 @@ CE9 = ClassEnrollment("CE3","Grade9")
 #A.save()
 #CE1.save()
 
+
+#Assigning Students to each enrollment 
 CE1._student = A
 CE2._student = A
 CE3._student = A
@@ -165,6 +169,8 @@ CE7._student = C
 CE8._student = C
 CE9._student = C
 
+
+#Assigning Courses to each enrollment
 CE1._course = C1
 CE2._course = C2
 CE3._course = C3
@@ -177,6 +183,8 @@ CE7._course = C1
 CE8._course = C2
 CE9._course = C3
 
+
+#Adding enrollment to the courses
 C1._enrollment.append(CE1)
 C1._enrollment.append(CE4)
 C1._enrollment.append(CE7)
@@ -189,6 +197,7 @@ C3._enrollment.append(CE3)
 C3._enrollment.append(CE6)
 C3._enrollment.append(CE9)
 
+#Adding enrollment to the student objects
 A.enroll2Class(CE1)
 A.enroll2Class(CE2)
 A.enroll2Class(CE3)
@@ -201,10 +210,32 @@ C.enroll2Class(CE1)
 C.enroll2Class(CE2)
 C.enroll2Class(CE3)
 
+
+#Every save after the first one loses the last name for some reason
+#This is copied almost directly from notes
 A.save()
+B.save()
+C.save()
 
 
+# Delete not working correctly
+# This is copied almost directly from notes
+#A.delete()
 
+
+#This is the method to get the student object and the objects that are related to it 
+# They are then printed out to console
+X = A.retrieveByCWID()
+
+print(X[0]._cwid)
+print(X[0]._firstname)
+print(X[0]._lastname)
+print(X[1]._id)
+print(X[1]._grade)
+print(X[2]._id)
+print(X[2]._grade)
+print(X[3]._id)
+print(X[3]._grade)
 
 
 
