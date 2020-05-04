@@ -62,10 +62,10 @@ class ClassEnrollment:
             
             cnt = len(df.index)
             print('+++ Appending to the DataFrame +++', df.index, df)
-            df.loc[cnt] = {'ID':self._id, 'Grade': self._grade}
+            df.loc[cnt] = {'ID':self._id, 'Grade': self._grade,'Student': self._student._cwid,'Course': self._course._id}
         except:
             print('+++ Creating a new DataFrame +++')
-            df = pd.DataFrame([[self._id, self._grade]], columns=['ID', 'Grade'])
+            df = pd.DataFrame([[self._id, self._grade,self._student._cwid,self._course._id]], columns=['ID', 'Grade','Student','Course'])
         df.to_csv('ClassEnrollment.csv', index=False)
 
         if(self._course != None):
@@ -118,15 +118,28 @@ class Student:
             o.save()
 
     #The specifications for the implementation of this method is quite vague
-    #The current version returns the student object and all immediate associated data with that student
-    #This includes the cwid, fname,lname,their classes, with class ids, with class grades
-    def retrieveByCWID(self):
+    @classmethod
+    def retrieveByCWID(cls,CWID):
         print("Getting student Object")
-        studentdata = list()
-        studentdata.append(self)
-        for i in self._enrollments:
-            studentdata.append(i)
-        return studentdata
+        df = pd.read_csv('Student.csv')
+        row = df[df.CWID == int(CWID)]
+        if (len(row.index)!=0):
+            sfromfile = cls(CWID,df.loc[row.index[0],'FName'],df.loc[row.index[0],'LName'])
+
+        df2 = pd.read_csv('ClassEnrollment.csv')
+        row2 = df2[df2.Student == int(CWID)]
+
+        enfromfile = row2.values.tolist()
+
+        for i in enfromfile:
+            print(i)
+            CEN = ClassEnrollment(i[0],i[1])
+            CN = Course(i[3],"","")
+            CEN._student = sfromfile
+            CEN._course = CN
+            sfromfile.enroll2Class(CEN)
+
+        return sfromfile
 
 
 ############## TEST DATA ####################
@@ -206,13 +219,13 @@ A.enroll2Class(CE1)
 A.enroll2Class(CE2)
 A.enroll2Class(CE3)
 
-B.enroll2Class(CE1)
-B.enroll2Class(CE2)
-B.enroll2Class(CE3)
+B.enroll2Class(CE4)
+B.enroll2Class(CE5)
+B.enroll2Class(CE6)
 
-C.enroll2Class(CE1)
-C.enroll2Class(CE2)
-C.enroll2Class(CE3)
+C.enroll2Class(CE7)
+C.enroll2Class(CE8)
+C.enroll2Class(CE9)
 
 
 #Every save after the first one loses the last name for some reason
@@ -222,24 +235,23 @@ B.save()
 C.save()
 
 
+#This is the method to get the student object and the objects that are related to it 
+#This will save A so that it can be saved again after deletion
+D = A.retrieveByCWID("1")
+
 #Will delete the student will not delete their enrollment records or courses
 #There is a delete method for Enrollment that must be used separately
 A.delete()
 
+print("A should now be deleted")
 
-#This is the method to get the student object and the objects that are related to it 
-# They are then printed out to console
-X = A.retrieveByCWID()
 
-print(X[0]._cwid)
-print(X[0]._firstname)
-print(X[0]._lastname)
-print(X[1]._id)
-print(X[1]._grade)
-print(X[2]._id)
-print(X[2]._grade)
-print(X[3]._id)
-print(X[3]._grade)
+#This will bring A back from the file with most of its content
+D.save()
+
+print("A should now be back")
+
+
 
 
 
