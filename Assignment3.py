@@ -109,7 +109,7 @@ class Student:
             
             cnt = len(df.index)
             print('+++ Appending to the DataFrame +++', df.index, df)
-            df.loc[cnt] = {'CWID':self._cwid, 'FName': self._firstname,'LNAME': self._lastname}
+            df.loc[cnt] = {'CWID':self._cwid, 'FName': self._firstname,'LName': self._lastname}
         except:
             print('+++ Creating a new DataFrame +++')
             df = pd.DataFrame([[self._cwid, self._firstname, self._lastname]], columns=['CWID','FName','LName'])
