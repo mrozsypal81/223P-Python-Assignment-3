@@ -46,7 +46,7 @@ class ClassEnrollment:
     def delete(self):
         # first find the row index of this object
         df = pd.read_csv('ClassEnrollment.csv')
-        row = df[df.Id == self._id]
+        row = df[df.ID == self._id]
         print('+++ delete +++' , row.index[0])
         if (len(row.index) != 0):
             print('+++ Before ', df)
@@ -89,7 +89,11 @@ class Student:
     def delete(self):
         # first find the row index of this object
         df = pd.read_csv('Student.csv')
-        row = df[df.CWID == self._cwid]
+
+        #Convert int to string
+        i = int(self._cwid)
+        row = df[df.CWID == i]
+        print(row)
         print('+++ delete +++' , row.index[0])
         if (len(row.index) != 0):
             print('+++ Before ', df)
@@ -218,9 +222,9 @@ B.save()
 C.save()
 
 
-# Delete not working correctly
-# This is copied almost directly from notes
-#A.delete()
+#Will delete the student will not delete their enrollment records or courses
+#There is a delete method for Enrollment that must be used separately
+A.delete()
 
 
 #This is the method to get the student object and the objects that are related to it 
